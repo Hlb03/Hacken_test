@@ -28,14 +28,15 @@ Data in the uploading file (with csv extension) must have the following structur
 
 File with test data is located in this repository as well
 and is named **test_user_data.csv**
+
 ---
 The whole stored data could be checked via the following URL:
 
     http://localhost:9200/user/_search?pretty
 
 ---
-Application supports both search by field and value and full-text search.
-The first search type checks value presence only the provided field, whereas 
+Application supports both search by field-value and full-text search.
+The first search type checks value presence only in the provided field, whereas 
 the second one searches within all fields.
 
 In addition, basic health checks are available on the url:
