@@ -2,6 +2,7 @@ package com.example.hackentest.service.implementation;
 
 import com.example.hackentest.dto.UserDto;
 import com.example.hackentest.entity.UserEntity;
+import com.example.hackentest.exceptions.ParseDataException;
 import com.example.hackentest.repository.UserRepository;
 import com.example.hackentest.service.ParserService;
 import com.example.hackentest.validation.FileValidation;
@@ -37,7 +38,7 @@ public class ParserServiceImpl implements ParserService {
                         .map(this::mapDtoToEntity)
                         .toList()
         );
-        log.info("Saved data form csv file");
+        log.info("Saved data form csv file with name {}", csvFile.getOriginalFilename());
     }
 
     private List<UserDto> parseDataFromCsvFile(MultipartFile csvFile) {
@@ -49,7 +50,7 @@ public class ParserServiceImpl implements ParserService {
                     .parse();
             log.info("Parsing data from csv file. Total amount of records is: {}", usersFromCsv.size());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ParseDataException("Failed to parse data from file. Try again later");
         }
 
         return usersFromCsv;
@@ -63,7 +64,6 @@ public class ParserServiceImpl implements ParserService {
                 .email(dto.getEmail())
                 .country(dto.getCountry())
                 .aboutUser(dto.getUserAbout())
-                .creationDate(LocalDate.now())
                 .build();
     }
 }

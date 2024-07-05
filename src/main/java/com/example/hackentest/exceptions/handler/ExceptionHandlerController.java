@@ -1,6 +1,7 @@
 package com.example.hackentest.exceptions.handler;
 
 import com.example.hackentest.exceptions.BadRequestException;
+import com.example.hackentest.exceptions.ParseDataException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -34,6 +35,12 @@ public class ExceptionHandlerController {
         return buildResponse(400, HttpStatus.BAD_REQUEST,
                 e.getAllErrors().stream()
                         .map(DefaultMessageSourceResolvable::getDefaultMessage).toList(), request.getRequestURI());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ParseDataException.class)
+    public ExceptionContainer<ExceptionResponse> catchParseException(ParseDataException e, HttpServletRequest request) {
+        return buildResponse(500, HttpStatus.INTERNAL_SERVER_ERROR, List.of(e.getMessage()), request.getRequestURI());
     }
 
     private ExceptionContainer<ExceptionResponse> buildResponse(int status, HttpStatus error, List<String> errorMessages, String path) {
