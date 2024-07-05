@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.2
+    container_name: es
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "curl -X GET http://localhost:9200/_cluster/health?pretty | grep status | grep -q '\\(green\\|yellow\\)'"
+      ]
+      interval: 10s
+      timeout: 10s
+      retries: 24
+
+  backend:
+    image: hlb03/hacken_test:v1.4
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
